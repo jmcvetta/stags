@@ -14,6 +14,9 @@ documentation.
 
 # Status
 
+Not yet ready.
+
+
 [![Build Status](https://travis-ci.org/jmcvetta/stags.png)](https://travis-ci.org/jmcvetta/stags)
 [![Build Status](https://drone.io/github.com/jmcvetta/stags/status.png)](https://drone.io/github.com/jmcvetta/stags/latest)
 [![Coverage Status](https://coveralls.io/repos/jmcvetta/stags/badge.png?branch=master)](https://coveralls.io/r/jmcvetta/stags)
