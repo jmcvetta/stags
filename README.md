@@ -5,14 +5,14 @@ Package `stags` is a struct tag parser for the [Go](http://golang.org)
 programming language.
 
 
-# Documentation
+## Documentation
 
 See [Go Walker](http://gowalker.org/github.com/jmcvetta/stags) or
 [GoDoc](http://godoc.org/github.com/jmcvetta/stags) for automatic
 documentation.
 
 
-# Status
+## Status
 
 Not yet ready.
 
@@ -22,7 +22,7 @@ Not yet ready.
 [![Coverage Status](https://coveralls.io/repos/jmcvetta/stags/badge.png?branch=master)](https://coveralls.io/r/jmcvetta/stags)
 
 
-# License
+## License
 
 This is Free Software, released under the terms of the [GPL
 v3](http://www.gnu.org/copyleft/gpl.html).
