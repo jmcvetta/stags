@@ -18,6 +18,12 @@ import (
 	"unicode"
 )
 
+// A Parser reads values from struct tags with a given name.
+type Parser struct {
+	// Name of the tag to parse, e.g. "foo" if your tag looks like: `foo:"bar"`
+	Name string
+}
+
 // tagOptions is the string following a comma in a struct field's "json"
 // tag, or the empty string. It does not include the leading comma.
 type tagOptions string
@@ -146,7 +152,7 @@ func (x byIndex) Less(i, j int) bool {
 // typeFields returns a list of fields that JSON should recognize for the given type.
 // The algorithm is breadth-first search over the set of structs to include - the top struct
 // and then any reachable anonymous structs.
-func TypeFields(t reflect.Type) []Field {
+func (p *Parser) TypeFields(t reflect.Type) []Field {
 	// Anonymous fields to explore at the current level and the next.
 	current := []Field{}
 	next := []Field{{Typ: t}}
@@ -177,7 +183,7 @@ func TypeFields(t reflect.Type) []Field {
 				if sf.PkgPath != "" { // unexported
 					continue
 				}
-				tag := sf.Tag.Get("json")
+				tag := sf.Tag.Get(p.Name)
 				if tag == "-" {
 					continue
 				}
@@ -301,7 +307,7 @@ var fieldCache struct {
 }
 
 // cachedTypeFields is like typeFields but uses a cache to avoid repeated work.
-func CachedTypeFields(t reflect.Type) []Field {
+func (p *Parser) CachedTypeFields(t reflect.Type) []Field {
 	fieldCache.RLock()
 	f := fieldCache.m[t]
 	fieldCache.RUnlock()
@@ -311,7 +317,7 @@ func CachedTypeFields(t reflect.Type) []Field {
 
 	// Compute fields without lock.
 	// Might duplicate effort but won't hold other computations back.
-	f = TypeFields(t)
+	f = p.TypeFields(t)
 	if f == nil {
 		f = []Field{}
 	}
