@@ -112,14 +112,14 @@ func (x byName) Len() int { return len(x) }
 func (x byName) Swap(i, j int) { x[i], x[j] = x[j], x[i] }
 
 func (x byName) Less(i, j int) bool {
-	if x[i].name != x[j].name {
-		return x[i].name < x[j].name
+	if x[i].Name != x[j].Name {
+		return x[i].Name < x[j].Name
 	}
-	if len(x[i].index) != len(x[j].index) {
-		return len(x[i].index) < len(x[j].index)
+	if len(x[i].Index) != len(x[j].Index) {
+		return len(x[i].Index) < len(x[j].Index)
 	}
-	if x[i].tag != x[j].tag {
-		return x[i].tag
+	if x[i].Tag != x[j].Tag {
+		return x[i].Tag
 	}
 	return byIndex(x).Less(i, j)
 }
@@ -132,15 +132,15 @@ func (x byIndex) Len() int { return len(x) }
 func (x byIndex) Swap(i, j int) { x[i], x[j] = x[j], x[i] }
 
 func (x byIndex) Less(i, j int) bool {
-	for k, xik := range x[i].index {
-		if k >= len(x[j].index) {
+	for k, xik := range x[i].Index {
+		if k >= len(x[j].Index) {
 			return false
 		}
-		if xik != x[j].index[k] {
-			return xik < x[j].index[k]
+		if xik != x[j].Index[k] {
+			return xik < x[j].Index[k]
 		}
 	}
-	return len(x[i].index) < len(x[j].index)
+	return len(x[i].Index) < len(x[j].Index)
 }
 
 // typeFields returns a list of fields that JSON should recognize for the given type.
@@ -166,14 +166,14 @@ func TypeFields(t reflect.Type) []Field {
 		count, nextCount = nextCount, map[reflect.Type]int{}
 
 		for _, f := range current {
-			if visited[f.typ] {
+			if visited[f.Typ] {
 				continue
 			}
-			visited[f.typ] = true
+			visited[f.Typ] = true
 
 			// Scan f.typ for fields to include.
-			for i := 0; i < f.typ.NumField(); i++ {
-				sf := f.typ.Field(i)
+			for i := 0; i < f.Typ.NumField(); i++ {
+				sf := f.Typ.Field(i)
 				if sf.PkgPath != "" { // unexported
 					continue
 				}
@@ -185,9 +185,9 @@ func TypeFields(t reflect.Type) []Field {
 				if !isValidTag(name) {
 					name = ""
 				}
-				index := make([]int, len(f.index)+1)
-				copy(index, f.index)
-				index[len(f.index)] = i
+				index := make([]int, len(f.Index)+1)
+				copy(index, f.Index)
+				index[len(f.Index)] = i
 
 				ft := sf.Type
 				if ft.Name() == "" && ft.Kind() == reflect.Ptr {
@@ -202,7 +202,7 @@ func TypeFields(t reflect.Type) []Field {
 						name = sf.Name
 					}
 					fields = append(fields, Field{name, tagged, index, ft})
-					if count[f.typ] > 1 {
+					if count[f.Typ] > 1 {
 						// If there were multiple instances, add a second,
 						// so that the annihilation code will see a duplicate.
 						// It only cares about the distinction between 1 or 2,
@@ -234,10 +234,10 @@ func TypeFields(t reflect.Type) []Field {
 		// One iteration per name.
 		// Find the sequence of fields with the name of this first field.
 		fi := fields[i]
-		name := fi.name
+		name := fi.Name
 		for advance = 1; i+advance < len(fields); advance++ {
 			fj := fields[i+advance]
-			if fj.name != name {
+			if fj.Name != name {
 				break
 			}
 		}
@@ -267,14 +267,14 @@ func dominantField(fields []Field) (Field, bool) {
 	// The fields are sorted in increasing index-length order. The winner
 	// must therefore be one with the shortest index length. Drop all
 	// longer entries, which is easy: just truncate the slice.
-	length := len(fields[0].index)
+	length := len(fields[0].Index)
 	tagged := -1 // Index of first tagged field.
 	for i, f := range fields {
-		if len(f.index) > length {
+		if len(f.Index) > length {
 			fields = fields[:i]
 			break
 		}
-		if f.tag {
+		if f.Tag {
 			if tagged >= 0 {
 				// Multiple tagged fields at the same level: conflict.
 				// Return no field.
@@ -297,7 +297,7 @@ func dominantField(fields []Field) (Field, bool) {
 
 var fieldCache struct {
 	sync.RWMutex
-	m map[reflect.Type][]field
+	m map[reflect.Type][]Field
 }
 
 // cachedTypeFields is like typeFields but uses a cache to avoid repeated work.
