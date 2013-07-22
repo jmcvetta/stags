@@ -11,11 +11,11 @@
 package stags
 
 import (
-	"strings"
 	"reflect"
-	"unicode"
 	"sort"
+	"strings"
 	"sync"
+	"unicode"
 )
 
 // tagOptions is the string following a comma in a struct field's "json"
@@ -77,12 +77,12 @@ func fieldByIndex(v reflect.Value, index []int) reflect.Value {
 		if v.Kind() == reflect.Ptr {
 			if v.IsNil() {
 				return reflect.Value{}
+			}
+			v = v.Elem()
 		}
-		v = v.Elem()
+		v = v.Field(i)
 	}
-	v = v.Field(i)
-}
-return v
+	return v
 }
 
 // stringValues is a slice of reflect.Value holding *reflect.StringValue.
@@ -96,10 +96,10 @@ func (sv stringValues) get(i int) string   { return sv[i].String() }
 
 // A field represents a single field found in a struct.
 type Field struct {
-	Name      string
-	Tag       bool
-	Index     []int
-	Typ       reflect.Type
+	Name  string
+	Tag   bool
+	Index []int
+	Typ   reflect.Type
 }
 
 // byName sorts field by name, breaking ties with depth,
