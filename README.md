@@ -14,7 +14,7 @@ documentation.
 
 ## Status
 
-Not yet ready.
+**Strictly experimental**, not ready for use.
 
 
 [![Build Status](https://travis-ci.org/jmcvetta/stags.png)](https://travis-ci.org/jmcvetta/stags)
