@@ -5,5 +5,18 @@
 package stags
 
 import (
-// "testing"
+	"log"
+	"reflect"
+	"testing"
 )
+
+type myStruct struct {
+	Foo string `mytag:"foo"`
+	Bar int    `mytag:"bar"`
+}
+
+func TestTypeFields(t *testing.T) {
+	p := Parser{Name: "mytag"}
+	fs := p.TypeFields(reflect.TypeOf(myStruct{}))
+	log.Println(fs)
+}
