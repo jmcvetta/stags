@@ -1,6 +1,10 @@
 stags - Struct tag parser for Go
 ================================
 
+**This package was an experiment, and has been abandoned.  Not usable as-is.**
+
+-----
+
 Package `stags` is a struct tag parser for the [Go](http://golang.org)
 programming language.
 
